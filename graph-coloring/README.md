@@ -6,6 +6,8 @@ To complete the homework, you will need to download and compile
 the latest version of the
 [Lingeling](http://fmv.jku.at/lingeling/) and, optionally,
 [Glucose](http://www.labri.fr/perso/lsimon/glucose/) SAT solver.  The resulting 
-binaries should go into your [graph-coloring/bin/](https://github.com/emina/cse507fa14/tree/master/graph-coloring/bin/) directory.
+binaries should go into the `graph-coloring/bin/` directory.
 
-You will also need the
+You will also need to download the [all-instances archive](https://sites.google.com/site/graphcoloring/files/all-instaces.tar.gz) from the [Graph Coloring Benchmarks](https://sites.google.com/site/graphcoloring/) page, and place its contents into the `graph-coloring/data/` directory.
+
+With this in place, see the [examples.rkt](src/examples.rkt) file for a quick tour of the data-structures and procedures you will can use to implement the [k-coloring](src/k-coloring.rkt) encoding. 
