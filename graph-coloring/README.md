@@ -10,4 +10,4 @@ binaries should go into the `graph-coloring/bin/` directory.
 
 You will also need to download the [all-instances archive](https://sites.google.com/site/graphcoloring/files/all-instaces.tar.gz) from the [Graph Coloring Benchmarks](https://sites.google.com/site/graphcoloring/) page, and place its contents into the `graph-coloring/data/` directory.
 
-With this in place, see the [examples.rkt](src/examples.rkt) file for a quick tour of the data-structures and procedures you will can use to implement the [k-coloring](src/k-coloring.rkt) encoding. 
+With this in place, see the [examples.rkt](src/examples.rkt) file for a quick tour of the data-structures and procedures you may want to use to implement the [k-coloring](src/k-coloring.rkt) encoding. 
