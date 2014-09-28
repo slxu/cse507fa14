@@ -1,5 +1,5 @@
 This folder contains a solution skeleton for Problem 9 of Homework
-1 for CSE 507. The skeleton is implemented in the Racket programming lanaguage,
+1 for CSE 507. The skeleton is implemented in Racket,
 which can be obtained from http://racket-lang.org.  Your task is to implement 
  the [k-coloring](src/k-coloring.rkt) procedure, which uses a SAT solver to 
 find a k-coloring for a graph (if one exists).
