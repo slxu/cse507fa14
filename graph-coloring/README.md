@@ -16,4 +16,4 @@ binaries into `cse507fa14/graph-coloring/bin/`.
 
 * Download the [all-instances archive](https://sites.google.com/site/graphcoloring/files/all-instaces.tar.gz) from the [Graph Coloring Benchmarks](https://sites.google.com/site/graphcoloring/) page, and place its contents into `cse507fa14/graph-coloring/data/`.
 
-* See the [src/examples.rkt](src/examples.rkt) file for a quick tour of the types and procedures to use in your implementation.
+* See [src/examples.rkt](src/examples.rkt) for a quick tour of the types and procedures to use in your implementation.
