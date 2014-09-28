@@ -7,6 +7,6 @@ the latest version of the
 [Lingeling](http://fmv.jku.at/lingeling/) and, optionally,
 [Glucose](http://www.labri.fr/perso/lsimon/glucose/) SAT solver.  The resulting 
 binaries should go into your  
-[graph-coloring/bin/](https://github.com/emina/cse507fa14/tree/master/graph-coloring/bin/).
+[graph-coloring/bin/](https://github.com/emina/cse507fa14/tree/master/graph-coloring/bin/) directory.
 
 You will also need the
