@@ -14,4 +14,4 @@ binaries should go into the `graph-coloring/bin/` directory.
 
 * Download the [all-instances archive](https://sites.google.com/site/graphcoloring/files/all-instaces.tar.gz) from the [Graph Coloring Benchmarks](https://sites.google.com/site/graphcoloring/) page, and place its contents into the `graph-coloring/data/` directory.
 
-* See the [examples.rkt](src/examples.rkt) file for a quick tour of the types and procedures to use in your implementation.
+* See the [src/examples.rkt](src/examples.rkt) file for a quick tour of the types and procedures to use in your implementation.
