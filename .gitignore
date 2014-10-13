@@ -11,5 +11,6 @@ Thumbs.db
 **/bin/*
 **/data/*
 **/solution.rkt
+**/simple-verifier/src/bench.rkt
 **/compiled
 **/compiled/**
