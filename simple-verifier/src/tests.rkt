@@ -1,6 +1,7 @@
 #lang racket
 
 (require "bv.rkt" "verifier.rkt")
+(provide (all-defined-out))
 
 ; Verify all benchmarks:
 (define (verify-all)
@@ -15,17 +16,17 @@
 
 (define-fragment (max2 x y)
   (define o1 (bvxor x y))
-  (define o2 (bvuge x y))
+  (define o2 (if (bvuge x y) 1 0))
   (define o3 (bvneg o2))
   (define o4 (bvand o1 o2))
   (return (bvxor o3 y)))
 
 (define-fragment (max3 x y)
   (define o1 (bvxor x y))
-  (define o2 (bvsle y x))
+  (define o2 (if (bvsge y x) 1 0))
   (define o3 (bvneg o2))
-  (define o4 (bvand o1 o2))
-  (return (bvxor o3 y)))
+  (define o4 (bvand o1 o3))
+  (return (bvxor o4 x)))
 
 (define-fragment (floor-of-ave1 x y)
   (define a (bvlshr x 1))
