@@ -1,15 +1,24 @@
 #lang racket
 
-(require "bv.rkt" "verifier.rkt")
+(require "bv.rkt" "solution.rkt")
 (provide (all-defined-out))
 
 ; Verify all benchmarks:
 (define (verify-all)
-  (time (verify max1 max2))
-  (time (verify max1 max3))
-  (time (verify floor-of-ave1 floor-of-ave2))
-  (time (verify flip-right-01 flip-right-02))
-  (time (verify isolate-right-01 isolate-right-02)))
+  (time (run-verifier max1 max2))
+  (time (run-verifier max1 max3))
+  (time (run-verifier floor-of-ave1 floor-of-ave2))
+  (time (run-verifier flip-right-01 flip-right-02))
+  (time (run-verifier isolate-right-01 isolate-right-02)))
+
+(define (run-verifier f1 f2)
+  (printf "Verifying: ~a ≡ ~a\n" (object-name f1) (object-name f2))
+  (let-values ([(outs cpu real gc) (time-apply (thunk (verify max1 max2)) '())])
+    (define out (car outs))
+    (if (equal? out 'EQUIVALENT)
+        (printf "  Outcome: EQUIVALENT\n")
+        (printf "  Outcome: counterexample = ~a\n" out))
+    (printf "  Time (ms): ~a\n" real)))
 
 (define-fragment (max1 x y)
   (return (if (bvsgt x y) x y)))
