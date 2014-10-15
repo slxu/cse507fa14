@@ -13,7 +13,7 @@
 
 (define (run-verifier f1 f2)
   (printf "Verifying: ~a ≡ ~a\n" (object-name f1) (object-name f2))
-  (let-values ([(outs cpu real gc) (time-apply (thunk (verify f1 f2)) '())])
+  (let-values ([(outs cpu real gc) (time-apply verify (list f1 f2))])
     (define out (car outs))
     (if (equal? out 'EQUIVALENT)
         (printf "  Outcome: EQUIVALENT\n")
