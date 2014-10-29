@@ -1,6 +1,6 @@
 #lang racket
 
-(require "bv.rkt" "verifier.rkt" "solver.rkt")
+(require "bv.rkt" "verifier.rkt" "solver.rkt" "tests.rkt")
 
 ; This is how we construct BV fragments:
 (define-fragment (P1 x1 y1 x2 y2)
@@ -67,3 +67,5 @@
 (solve
  '((declare-const a Bool)
    (assert (and a (not a)))))
+
+(verify-all)

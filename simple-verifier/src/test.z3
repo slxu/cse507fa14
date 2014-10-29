@@ -1,0 +1,37 @@
+(set-logic QF_BV)
+
+(declare-const x1 (_ BitVec 32))
+(declare-const y1 (_ BitVec 32))
+(declare-const x2 (_ BitVec 32))
+(declare-const y2 (_ BitVec 32))
+
+(define-fun p1return ((x1 (_ BitVec 32)) 
+                      (y1 (_ BitVec 32))
+                      (x2 (_ BitVec 32))
+                      (y2 (_ BitVec 32))) (_ BitVec 32) 
+  (bvmul (bvadd x1 y1) (bvadd x2 y2))
+)
+
+(define-fun p2u1 ((x1 (_ BitVec 32)) 
+                      (y1 (_ BitVec 32))
+                      (x2 (_ BitVec 32))
+                      (y2 (_ BitVec 32))) (_ BitVec 32) 
+  (bvadd x1 y1)
+)
+
+(define-fun p2u2 ((x1 (_ BitVec 32)) 
+                      (y1 (_ BitVec 32))
+                      (x2 (_ BitVec 32))
+                      (y2 (_ BitVec 32))) (_ BitVec 32) 
+  (bvadd x2 y2)
+)
+
+(define-fun p2return ((x1 (_ BitVec 32)) 
+                      (y1 (_ BitVec 32))
+                      (x2 (_ BitVec 32))
+                      (y2 (_ BitVec 32))) (_ BitVec 32) 
+  (bvmul (p2u1 x1 y1 x2 y2) (p2u2 x1 y1 x2 y2))
+)
+
+(assert (not (= (p1return x1 y1 x2 y2) (p2return x1 y1 x2 y2))))
+(check-sat)
