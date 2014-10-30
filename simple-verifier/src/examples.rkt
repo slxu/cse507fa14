@@ -68,6 +68,6 @@
 ; '((declare-const a Bool)
 ;   (assert (and a (not a)))))
 
-;(verify-all)
-(run-verifier P1 P2)
+(verify-all)
+;(run-verifier P1 P2)
 

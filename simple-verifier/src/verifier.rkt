@@ -65,8 +65,9 @@
                           [(eq? stmt-content 'false) 'false ]
                           [else (car (hash-ref parameters-hash stmt-content (list (cons (string->symbol (string-append prefix (~a stmt-content))) 
                                                                                                      (prefix-parameters parameters prefix))) ))])] ; id or true or false
-    [(number? stmt-content) stmt-content] ; const
-    [else (cons (syntax->datum (car stmt-content)) (map (lambda (b) (declare-expression parameters prefix b parameters-hash)) (cdr stmt-content)))]
+    [(number? stmt-content) (list '_ (string->symbol (string-append "bv" (~a stmt-content))) '32)] ; const
+    [else (let [(head (syntax->datum (car stmt-content)))]
+            (cons (if (eq? head 'if ) 'ite  head )  (map (lambda (b) (declare-expression parameters prefix b parameters-hash)) (cdr stmt-content))))]
   )))
 
 ;list of new symbols
