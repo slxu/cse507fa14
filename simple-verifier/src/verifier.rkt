@@ -25,69 +25,77 @@
 (define (generate-z3-input f1 f2)
   (define f1parameters (extract-parameters f1))
   (define f2parameters (extract-parameters f2))
+  (define f1prefix-parameters (prefix-parameters f1parameters "f1"))
+  (define f2prefix-parameters (prefix-parameters f2parameters "f2"))
   (append 
      (declare-parameters f1parameters "f1")
      (declare-parameters f2parameters "f2")
      (declare-functions f1 f1parameters "f1")
      (declare-functions f2 f2parameters "f2")
-     (list (list 'assert (list 'not (list '=> (equals-parameters f1parameters f2parameters) (equals-formulas f1parameters f2parameters))))))
+     (list (list 'assert (list 'not (list '=> (equals-parameters f1prefix-parameters f2prefix-parameters) (equals-formulas f1prefix-parameters f2prefix-parameters))))))
   )
 
-(define (equals-parameters f1parameters f2parameters)
-  (cons 'and (map (lambda (a b) (list '= a b )) (prefix-parameters f1parameters "f1") (prefix-parameters f2parameters "f2"))))
+(define (equals-parameters f1prefix-parameters f2prefix-parameters)
+  (cons 'and (map (lambda (a b) (list '= a b )) f1prefix-parameters f2prefix-parameters)))
 
-(define (equals-formulas f1parameters f2parameters)
-  (list '= (cons 'f1return (prefix-parameters f1parameters "f1")) (cons 'f2return (prefix-parameters f2parameters "f2"))))
+(define (equals-formulas f1prefix-parameters f2prefix-parameters)
+  (list '= (cons 'f1return f1prefix-parameters ) (cons 'f2return f2prefix-parameters)))
 
 (define (declare-functions frgmt parameters prefix)
   (define statements (extract-statements frgmt))
   (define parameters-hash (make-hash (map (lambda (b) (list b (string->symbol (string-append prefix (~a b) )))) parameters)))
+  (define variable-fun-name-hash (make-hash))
   (map (lambda (b) 
          (let* [(terms (syntax-e b))
                 (head (syntax-e (car terms)))
                 (body (cdr terms))]
          (cond 
-           [(eq? head 'define) (process-define-statement parameters prefix body parameters-hash)]
-           [(eq? head 'return) (process-return-statement parameters prefix body parameters-hash)]
-           ;[(eq? head 'set!) "find set!"]
+           [(eq? head 'define) (process-define-statement parameters prefix body parameters-hash variable-fun-name-hash)]
+           [(eq? head 'return) (process-return-statement parameters prefix body parameters-hash variable-fun-name-hash)]
+           [(eq? head 'set!) (process-set-statement parameters prefix body parameters-hash variable-fun-name-hash)]
            [else (error (string-append "unknown statement head:" (~a head)))]
            )))
        statements)
   )
 
-(define (declare-expression parameters prefix stmt parameters-hash) 
+(define (declare-expression parameters prefix stmt parameters-hash variable-fun-name-hash) 
   (begin
-  ;(printf "current exp: ")
-  ;(printf (~a stmt))
   (define stmt-content (syntax-e stmt))
   (cond  
     [(symbol? stmt-content) (cond [(eq? stmt-content 'true) 'true ]
                           [(eq? stmt-content 'false) 'false ]
-                          [else (car (hash-ref parameters-hash stmt-content (list (cons (string->symbol (string-append prefix (~a stmt-content))) 
+                          [else (car (hash-ref parameters-hash stmt-content (list (cons (hash-ref variable-fun-name-hash (~a stmt-content) "") 
                                                                                                      (prefix-parameters parameters prefix))) ))])] ; id or true or false
     [(number? stmt-content) (list '_ (string->symbol (string-append "bv" (~a stmt-content))) '32)] ; const
     [else (let [(head (syntax->datum (car stmt-content)))]
-            (cons (if (eq? head 'if ) 'ite  head )  (map (lambda (b) (declare-expression parameters prefix b parameters-hash)) (cdr stmt-content))))]
+            (cons (if (eq? head 'if ) 'ite  head )  (map (lambda (b) (declare-expression parameters prefix b parameters-hash variable-fun-name-hash)) (cdr stmt-content))))]
   )))
 
 ;list of new symbols
 (define (prefix-parameters parameters prefix)
   (map (lambda (b) (string->symbol (string-append prefix (~a b) )) ) parameters))
 
-(define (process-return-statement parameters prefix body parameters-hash)
+(define (process-return-statement parameters prefix body parameters-hash variable-fun-name-hash)
   (define fun-name (string->symbol (string-append prefix "return")))
-  ;(printf "in process return \n")
   (list 'define-fun fun-name (parameters-as-fun-parameters parameters prefix) '(_ BitVec 32)
-    (declare-expression parameters prefix (car body) parameters-hash)))
+    (declare-expression parameters prefix (car body) parameters-hash variable-fun-name-hash)))
 
-(define (process-define-statement parameters prefix body parameters-hash)
-  (define fun-name (string->symbol (string-append prefix (~a (syntax-e (car body))))))
-  ;(printf "in process define: ")
-  ;(printf (~a fun-name))
-  ;(printf "\n")
-  ;(printf (~a body))
-  (list 'define-fun fun-name (parameters-as-fun-parameters parameters prefix) '(_ BitVec 32)
-    (declare-expression parameters prefix (car (cdr body)) parameters-hash) ))
+(define (process-define-statement parameters prefix body parameters-hash variable-fun-name-hash)
+  (define variable-name (~a (syntax-e (car body))))
+  (define fun-name (string->symbol (string-append prefix variable-name)))
+  (begin
+    (hash-set! variable-fun-name-hash variable-name fun-name)
+    (list 'define-fun fun-name (parameters-as-fun-parameters parameters prefix) '(_ BitVec 32)
+      (declare-expression parameters prefix (car (cdr body)) parameters-hash variable-fun-name-hash) )))
+
+(define (process-set-statement parameters prefix body parameters-hash variable-fun-name-hash)
+  (define variable-name (~a (syntax-e (car body))))
+  (define variable-old-fun-name (hash-ref variable-fun-name-hash variable-name))
+  (define variable-new-fun-name (string->symbol (string-append prefix (symbol->string variable-old-fun-name))))
+  (begin
+    (hash-set! variable-fun-name-hash variable-name variable-new-fun-name)
+    (list 'define-fun variable-new-fun-name (parameters-as-fun-parameters parameters prefix) '(_ BitVec 32)
+      (declare-expression parameters prefix (car (cdr body)) parameters-hash variable-fun-name-hash) )))
 
 (define (parameters-as-fun-parameters parameters prefix)
    (map (lambda (b) (list b '(_ BitVec 32))) (prefix-parameters parameters prefix))
