@@ -18,9 +18,14 @@
 ;
 ; (-> fragment? fragment? (or/c 'EQUIVALENT (listof integer?))))
 (define (verify f1 f2)
-  (define s (generate-z3-input f1 f2))
+  (define f1parameters (extract-parameters f1))
+  (define f2parameters (extract-parameters f2))
+  (define f1prefix-parameters (prefix-parameters f1parameters "f1"))
+  (define f2prefix-parameters (prefix-parameters f2parameters "f2"))
+  (define s (generate-z3-input f1 f2 f1parameters f2parameters f1prefix-parameters f2prefix-parameters))
   ;(printf (~a s))
-  (solve s))
+  (define sr (solve s))
+  (if (eq? sr #f) 'EQUIVALENT (map (lambda (a) (hash-ref sr a)) f1prefix-parameters)))
 
 (define expression-type-hash
   (make-hash '((= . Bool) (bvule . Bool) (bvult . Bool) (bvuge . Bool) (bvugt . Bool) 
@@ -30,11 +35,7 @@
                (bvshl . (_ BitVec 32)) (bvlshr . (_ BitVec 32)) (bvashr . (_ BitVec 32))
                (bvsub . (_ BitVec 32)) (bvor . (_ BitVec 32)) (bvand . (_ BitVec 32)) (bvxor . (_ BitVec 32)))))
 
-(define (generate-z3-input f1 f2)
-  (define f1parameters (extract-parameters f1))
-  (define f2parameters (extract-parameters f2))
-  (define f1prefix-parameters (prefix-parameters f1parameters "f1"))
-  (define f2prefix-parameters (prefix-parameters f2parameters "f2"))
+(define (generate-z3-input f1 f2 f1parameters f2parameters f1prefix-parameters f2prefix-parameters)
   (append 
      (declare-parameters f1parameters "f1")
      (declare-parameters f2parameters "f2")
