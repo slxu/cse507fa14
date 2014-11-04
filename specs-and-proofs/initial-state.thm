@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<alloy>
+
+<view nodetheme="Martha">
+
+<defaultnode/>
+
+<defaultedge/>
+
+<node>
+   <type name="Int"/>
+   <type name="String"/>
+   <type name="This"/>
+   <type name="univ"/>
+   <type name="seq/Int"/>
+</node>
+
+<node shape="Box" color="Blue">
+   <type name="Null"/>
+</node>
+
+<node shape="Ellipse" color="Yellow">
+   <type name="List"/>
+</node>
+
+<node shape="Inv Triangle" color="Red">
+   <type name="Str"/>
+</node>
+
+<node shape="Parallelogram" color="Green">
+   <type name="Node"/>
+</node>
+
+<node showlabel="no">
+   <set name="$far0" type="Null"/>
+   <set name="$far2" type="Node"/>
+   <set name="$far2" type="Null"/>
+   <set name="$mid0" type="Node"/>
+   <set name="$mid0" type="Null"/>
+   <set name="$mid1" type="Node"/>
+   <set name="$mid1" type="Null"/>
+   <set name="$mid2" type="Node"/>
+   <set name="$mid2" type="Null"/>
+   <set name="$near0" type="Node"/>
+   <set name="$near0" type="Null"/>
+   <set name="$near1" type="Node"/>
+   <set name="$near1" type="Null"/>
+   <set name="$near2" type="Node"/>
+   <set name="$near2" type="Null"/>
+</node>
+
+<node visible="yes" showlabel="no">
+   <set name="$far0" type="Node"/>
+</node>
+
+<edge attribute="no">
+   <relation name="data"> <type name="Node"/> <type name="Str"/> </relation>
+</edge>
+
+<edge visible="no">
+   <relation name="$head0"> <type name="List"/> <type name="Node"/> </relation>
+   <relation name="$head0"> <type name="List"/> <type name="Null"/> </relation>
+   <relation name="$next0"> <type name="Node"/> <type name="Node"/> </relation>
+   <relation name="$next0"> <type name="Node"/> <type name="Null"/> </relation>
+   <relation name="$next1"> <type name="Node"/> <type name="Node"/> </relation>
+   <relation name="$next1"> <type name="Node"/> <type name="Null"/> </relation>
+   <relation name="$next2"> <type name="Node"/> <type name="Node"/> </relation>
+   <relation name="$next2"> <type name="Node"/> <type name="Null"/> </relation>
+   <relation name="$next3"> <type name="Node"/> <type name="Node"/> </relation>
+   <relation name="$next3"> <type name="Node"/> <type name="Null"/> </relation>
+</edge>
+
+<edge visible="no" attribute="yes">
+   <relation name="data"> <type name="Node"/> <type name="Null"/> </relation>
+</edge>
+
+</view>
+
+</alloy>
