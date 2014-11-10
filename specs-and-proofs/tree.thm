@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<alloy>
+
+<view nodetheme="Martha">
+
+<defaultnode/>
+
+<defaultedge/>
+
+<node>
+   <type name="Int"/>
+   <type name="String"/>
+   <type name="univ"/>
+   <type name="seq/Int"/>
+</node>
+
+<node hideunconnected="yes" shape="Ellipse" color="Green">
+   <type name="Node"/>
+</node>
+
+<edge color="Red" label="">
+   <relation name="$t"> <type name="Node"/> <type name="Node"/> </relation>
+</edge>
+
+<edge color="Blue" label="">
+   <relation name="$g"> <type name="Node"/> <type name="Node"/> </relation>
+</edge>
+
+<edge color="Blue" label="left">
+   <relation name="$left"> <type name="Node"/> <type name="Node"/> </relation>
+</edge>
+
+<edge color="Red" label="right">
+   <relation name="$right"> <type name="Node"/> <type name="Node"/> </relation>
+</edge>
+
+<edge visible="no" attribute="yes" label="key">
+   <relation name="$key"> <type name="Node"/> <type name="Int"/> </relation>
+</edge>
+
+</view>
+
+</alloy>
